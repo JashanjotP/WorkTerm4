@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>W4 Co-op Report — Jashanjot Panjrath @ SAP Canada</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,800;1,9..144,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            body: ['DM Sans', 'sans-serif'],
+          },
+          colors: {
+            navy: '#0a0f1e',
+            'sap-blue': '#0070F2',
+            'sap-gold': '#F0AB00',
+            slate: {
+              850: '#131929',
+            }
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.7s ease forwards',
+          },
+          keyframes: {
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(24px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      background-color: #0a0f1e;
+      font-family: 'DM Sans', sans-serif;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* Noise grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #F0AB00;
+    }
+
+    .display-heading {
+      font-family: 'Fraunces', serif;
+      line-height: 1.05;
+    }
+
+    /* Glowing blue line */
+    .glow-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #0070F2, transparent);
+      box-shadow: 0 0 8px #0070F2;
+    }
+
+    /* Card styles */
+    .glass-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      backdrop-filter: blur(8px);
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .glass-card:hover {
+      background: rgba(255,255,255,0.055);
+      border-color: rgba(0, 112, 242, 0.35);
+    }
+
+    /* Tech tag */
+    .tech-tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(0, 112, 242, 0.12);
+      border: 1px solid rgba(0, 112, 242, 0.3);
+      color: #7ab8f5;
+    }
+
+    /* Goal number */
+    .goal-number {
+      font-family: 'Fraunces', serif;
+      font-size: 4rem;
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, #0070F2, #F0AB00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Mesh gradient blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* Fade-up animation helper */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .animate-on-scroll.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Horizontal scrolling for tech stack */
+    .tech-strip {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Nav dot */
+    .nav-link {
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: #F0AB00; }
+
+    hr.divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin: 0;
+    }
+
+    .highlight {
+      color: #F0AB00;
+      font-style: italic;
+    }
+
+    /* Image placeholder */
+    .img-placeholder {
+      background: linear-gradient(135deg, #0d1629 0%, #131929 50%, #111827 100%);
+      border: 1px dashed rgba(0, 112, 242, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: #475569;
+    }
+  </style>
+</head>
+
+<body class="relative">
+
+  <!-- Background blobs -->
+  <div class="blob w-96 h-96 bg-blue-900 opacity-20 top-0 -left-24" style="position:fixed;"></div>
+  <div class="blob w-72 h-72 opacity-10 top-96 right-0" style="background:#F0AB00;position:fixed;"></div>
+  <div class="blob w-80 h-80 bg-blue-800 opacity-10 bottom-0 left-1/3" style="position:fixed;"></div>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4" style="background:rgba(10,15,30,0.75);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05);">
+    <span class="section-label tracking-widest" style="color:#0070F2;">SAP W4 · Winter 2026</span>
+    <div class="hidden md:flex gap-6">
+      <a href="#about" class="nav-link">About</a>
+      <a href="#role" class="nav-link">Role</a>
+      <a href="#goals" class="nav-link">Goals</a>
+      <a href="#work" class="nav-link">Work</a>
+      <a href="#conclusion" class="nav-link">Conclusion</a>
+    </div>
+    <span class="text-xs text-slate-600 font-mono hidden md:block">1222040</span>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="relative min-h-screen flex flex-col justify-center px-6 md:px-16 lg:px-28 pt-24 pb-16 z-10">
+    <div class="max-w-5xl mx-auto w-full">
+
+      <div class="section-label mb-6 animate-on-scroll">Co-op Work Term Report · Bachelor of Computing</div>
+
+      <h1 class="display-heading text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 animate-on-scroll" style="animation-delay:0.1s;">
+        Cloud at Scale,<br/>
+        <span class="highlight">From the Inside.</span>
+      </h1>
+
+      <p class="text-slate-400 text-lg md:text-xl max-w-2xl mb-10 font-light leading-relaxed animate-on-scroll" style="animation-delay:0.2s;">
+        Four months inside SAP Canada's <strong class="text-slate-200 font-medium">Hana Data Lake (HDL) Services</strong> team building resilience, enforcing security compliance, and keeping production clusters 
+      </p>
+
+      <!-- Meta strip -->
+      <div class="flex flex-wrap gap-6 text-sm animate-on-scroll" style="animation-delay:0.3s;">
+        <div>
+          <div class="section-label mb-1">Student</div>
+          <div class="text-white font-medium">Jashanjot Panjrath</div>
+        </div>
+        <div class="w-px bg-white/10"></div>
+        <div>
+          <div class="section-label mb-1">Employer</div>
+          <div class="text-white font-medium">SAP Canada, Inc.</div>
+        </div>
+        <div class="w-px bg-white/10"></div>
+        <div>
+          <div class="section-label mb-1">Term</div>
+          <div class="text-white font-medium">Winter 2026 · W4</div>
+        </div>
+        <div class="w-px bg-white/10"></div>
+        <div>
+          <div class="section-label mb-1">Role</div>
+          <div class="text-white font-medium">SAP iXp Intern — Cloud Database Services Developer</div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="glow-line mt-14 animate-on-scroll" style="animation-delay:0.4s;"></div>
+    </div>
+  </section>
+
+  <!-- ========== PHOTO + ABOUT EMPLOYER ========== -->
+  <section id="about" class="relative z-10 px-6 md:px-16 lg:px-28 py-20">
+    <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+
+      <!-- Image placeholder -->
+      <div class="img-placeholder rounded-2xl aspect-[4/5] animate-on-scroll">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span class="text-xs font-mono opacity-50"><img /></span>
+      </div>
+
+      <!-- Employer info -->
+      <div class="animate-on-scroll">
+        <div class="section-label mb-3">About the Employer</div>
+        <h2 class="display-heading text-4xl md:text-5xl font-semibold text-white mb-6">SAP Canada,<br/><span class="highlight">Waterloo.</span></h2>
+        <p class="text-slate-400 leading-relaxed mb-5">
+          SAP is a global enterprise software powerhouse trusted by over <strong class="text-slate-200">400,000 customers</strong> worldwide and built on a workforce of more than 100,000 people. Originally renowned for enterprise resource planning (ERP), SAP has evolved into a full-stack cloud company — spanning databases, analytics, intelligent technologies, and experience management.
+        </p>
+        <p class="text-slate-400 leading-relaxed mb-5">
+          The Waterloo office is one of SAP's key Canadian engineering hubs, with deep roots in the local tech ecosystem. My team, <strong class="text-slate-200">HDL Services (Hana Data Lake)</strong>, sits within SAP's Database and Data Analytics division — responsible for keeping cloud-hosted database instances running at planetary scale, across thousands of machines in data centres on AWS, Azure, and GCP.
+        </p>
+        <p class="text-slate-400 leading-relaxed">
+          What makes SAP distinct from many tech companies is its engineering rigour around <em>reliability</em>: the systems we maintain power some of the world's largest enterprises, so zero-downtime deployments and bullet-proof security compliance aren't goals they're requirements.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ========== ROLE & TECH STACK ========== -->
+  <section id="role" class="relative z-10 px-6 md:px-16 lg:px-28 py-20">
+    <div class="max-w-5xl mx-auto">
+      <div class="section-label mb-3 animate-on-scroll">Job Description</div>
+      <h2 class="display-heading text-4xl md:text-5xl font-semibold text-white mb-4 animate-on-scroll">
+        What I Actually Did.
+      </h2>
+      <div class="glow-line mb-10 animate-on-scroll"></div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <!-- Card 1 -->
+        <div class="glass-card rounded-2xl p-6 animate-on-scroll">
+          <div class="text-sap-gold mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-white mb-2">Architecture Deep Dive</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Spent the first weeks mapping the entire HDL Services architecture — understanding how the Kubernetes <strong class="text-slate-300">Operator Pattern</strong> and Custom Resources orchestrate database instances, how storage solutions span multiple clusters, and how microservices communicate end to end.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card rounded-2xl p-6 animate-on-scroll" style="animation-delay:0.1s;">
+          <div class="text-sap-gold mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-white mb-2">Security Compliance — Zero Downtime</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Identified a missing security configuration in our component that would cause compliance checks to fail across <strong class="text-slate-300">all production and canary clusters</strong>. Reverse-engineered how the Kubernetes Operator dynamically created resources, then rolled out the fix with zero downtime and no service disruptions.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card rounded-2xl p-6 animate-on-scroll" style="animation-delay:0.2s;">
+          <div class="text-sap-gold mb-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+          </div>
+          <h3 class="font-semibold text-white mb-2">Resilience Verification & Testing</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Led verification and testing for a critical data resilience feature — centred around preventing and recovering from accidental database deletion. Designed test scenarios, validated recovery paths, and confirmed the feature met production-grade reliability requirements.
+          </p>
+        </div>
+      </div>
+
+      <!-- Tech stack -->
+      <div class="animate-on-scroll">
+        <div class="section-label mb-4">Tech Stack</div>
+        <div class="tech-strip">
+          <span class="tech-tag">Go</span>
+          <span class="tech-tag">Python</span>
+          <span class="tech-tag">Kubernetes</span>
+          <span class="tech-tag">Docker</span>
+          <span class="tech-tag">Helm</span>
+          <span class="tech-tag">Argo Workflows</span>
+          <span class="tech-tag">Gardener</span>
+          <span class="tech-tag">Prometheus</span>
+          <span class="tech-tag">Grafana</span>
+          <span class="tech-tag">AWS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ========== LEARNING GOALS ========== -->
+  <section id="goals" class="relative z-10 px-6 md:px-16 lg:px-28 py-20">
+    <div class="max-w-5xl mx-auto">
+      <div class="section-label mb-3 animate-on-scroll">Learning Goals</div>
+      <h2 class="display-heading text-4xl md:text-5xl font-semibold text-white mb-4 animate-on-scroll">
+        Three Goals.<br/><span class="highlight">All Achieved.</span>
+      </h2>
+      <div class="glow-line mb-14 animate-on-scroll"></div>
+
+      <!-- Goal 1 -->
+      <div class="glass-card rounded-2xl p-8 md:p-10 mb-6 animate-on-scroll">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="goal-number shrink-0">01</div>
+          <div>
+            <div class="section-label mb-2">Technical · Personal Learning</div>
+            <h3 class="display-heading text-2xl font-semibold text-white mb-3">
+              Kubernetes & Cloud Database Expertise
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-4">
+              My primary technical goal was to develop a solid, hands-on understanding of deploying, managing, and troubleshooting database services across multi-cluster Kubernetes environments specifically within SAP's cloud-native setup.
+            </p>
+            <div class="border-l-2 border-sap-gold pl-4 mb-4">
+              <p class="text-slate-300 text-sm italic leading-relaxed">
+                "Understand & document SAP's multi-cluster K8s architecture, storage solutions, and how database services operate across clusters. Deploy & troubleshoot a database service in the dev environment, then apply those skills to manage real production workloads."
+              </p>
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              <span class="text-green-400 font-medium">✓ Achieved.</span> Beyond just learning the architecture, I got deep into the <strong class="text-slate-200">Kubernetes Operator Pattern</strong> and Custom Resources, concepts I hadn't encountered before  and applied that knowledge directly to the security compliance project, where understanding how the Operator dynamically created resources was the key to shipping a correct fix without downtime.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal 2 -->
+      <div class="glass-card rounded-2xl p-8 md:p-10 mb-6 animate-on-scroll" style="animation-delay:0.1s;">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="goal-number shrink-0">02</div>
+          <div>
+            <div class="section-label mb-2">Professional & Ethical · Time Management</div>
+            <h3 class="display-heading text-2xl font-semibold text-white mb-3">
+              Task Efficiency & Personal Organisation
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-4">
+              I wanted to become measurably more effective at getting things done — prioritising high-impact work, tracking time honestly, and consistently meeting commitments without burning bandwidth on low-value activity.
+            </p>
+            <div class="border-l-2 border-sap-gold pl-4 mb-4">
+              <p class="text-slate-300 text-sm italic leading-relaxed">
+                "Implement time-tracking tools, prioritise tasks using task management systems, and practice focusing on high-impact activities — measured by consistently meeting deadlines and positive feedback from supervisors."
+              </p>
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              <span class="text-green-400 font-medium">✓ Achieved.</span> Working on production-critical tasks with real consequences forced a genuine discipline upgrade. I learned quickly that on a team where an outage means thousands of affected customers, prioritising correctly and communicating blockers early aren't soft skills they're engineering skills.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal 3 -->
+      <div class="glass-card rounded-2xl p-8 md:p-10 animate-on-scroll" style="animation-delay:0.2s;">
+        <div class="flex flex-col md:flex-row md:items-start gap-6">
+          <div class="goal-number shrink-0">03</div>
+          <div>
+            <div class="section-label mb-2">Communication · Oral</div>
+            <h3 class="display-heading text-2xl font-semibold text-white mb-3">
+              Technical Communication & Clarity
+            </h3>
+            <p class="text-slate-400 leading-relaxed mb-4">
+              I set out to improve my spoken communication in professional engineering contexts getting comfortable with technical vocabulary, asking better questions, and holding my own in conversations with senior engineers and my manager.
+            </p>
+            <div class="border-l-2 border-sap-gold pl-4 mb-4">
+              <p class="text-slate-300 text-sm italic leading-relaxed">
+                "Observe successful communication patterns, engage actively with managers and team members, and get comfortable using technical terminology accurately measured by positive feedback from my manager."
+              </p>
+            </div>
+            <p class="text-slate-400 leading-relaxed">
+              <span class="text-green-400 font-medium">✓ Achieved.</span> The security compliance task in particular required presenting my analysis, walking senior engineers through my findings, and defending my proposed fix. That experience more than anything solidified my confidence in technical discussions. By the end of the term, conversations that felt intimidating in week one felt natural.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ========== WHAT I LEARNED ========== -->
+  <section id="work" class="relative z-10 px-6 md:px-16 lg:px-28 py-20">
+    <div class="max-w-5xl mx-auto">
+      <div class="section-label mb-3 animate-on-scroll">Key Takeaways</div>
+      <h2 class="display-heading text-4xl md:text-5xl font-semibold text-white mb-4 animate-on-scroll">
+        What Cloud Scale<br/><span class="highlight">Actually Feels Like.</span>
+      </h2>
+      <div class="glow-line mb-10 animate-on-scroll"></div>
+
+      <div class="grid md:grid-cols-2 gap-8 animate-on-scroll">
+        <p class="text-slate-400 leading-relaxed text-lg">
+          Walking into SAP, I understood cloud computing as a concept. Leaving, I understand it as a <em>practice</em> a discipline with real consequences. When the system you're changing runs across dozens of production and canary clusters, every decision carries weight.
+        </p>
+        <p class="text-slate-400 leading-relaxed text-lg">
+          The most surprising lesson was how central <strong class="text-slate-200">systems thinking</strong> is to cloud engineering. Before I could fix anything, I had to understand everything how the Operator created resources dynamically, how compliance checks propagated, what a rollout failure would look like in Grafana. Speed comes from depth of understanding, not shortcuts.
+        </p>
+      </div>
+
+      <!-- Stat highlights -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 animate-on-scroll">
+        <div class="glass-card rounded-xl p-5 text-center">
+          <div class="display-heading text-3xl font-bold text-sap-blue mb-1">0</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider">Downtime Events</div>
+        </div>
+        <div class="glass-card rounded-xl p-5 text-center">
+          <div class="display-heading text-3xl font-bold text-sap-blue mb-1">10+</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider">Technologies Used</div>
+        </div>
+        <div class="glass-card rounded-xl p-5 text-center">
+          <div class="display-heading text-3xl font-bold text-sap-blue mb-1">3/3</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider">Goals Completed</div>
+        </div>
+        <div class="glass-card rounded-xl p-5 text-center">
+          <div class="display-heading text-3xl font-bold text-sap-blue mb-1">4mo</div>
+          <div class="text-xs text-slate-400 uppercase tracking-wider">Of Real Production Work</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ========== CONCLUSION ========== -->
+  <section id="conclusion" class="relative z-10 px-6 md:px-16 lg:px-28 py-20">
+    <div class="max-w-3xl mx-auto text-center animate-on-scroll">
+      <div class="section-label mb-3">Conclusion</div>
+      <h2 class="display-heading text-4xl md:text-6xl font-semibold text-white mb-8">
+        A Term Worth<br/><span class="highlight">Remembering.</span>
+      </h2>
+      <p class="text-slate-400 leading-relaxed text-lg mb-6">
+        This co-op term was the kind of experience that resets your benchmark. Working on live production systems with real users, real consequences, and a team that treated me as a genuine contributor pushed my technical skills and professional maturity further than any classroom or personal project could.
+      </p>
+      <p class="text-slate-400 leading-relaxed text-lg mb-6">
+        I arrived wanting to learn Kubernetes. I left having used it in anger: diagnosing live issues, planning compliance remediations, and shipping changes carefully across a global fleet of clusters. The skills I built here cloud-native architecture understanding, security thinking, reliable delivery under pressure are ones I'll carry into every future work term and beyond.
+      </p>
+      <p class="text-slate-400 leading-relaxed text-lg">
+        If there's one sentence I'd want a reader to take away: <span class="text-white font-medium">this term made me a better engineer, not just a more experienced one.</span>
+      </p>
+    </div>
+  </section>
+
+  <hr class="divider" />
+
+  <!-- ========== ACKNOWLEDGMENTS ========== -->
+  <section class="relative z-10 px-6 md:px-16 lg:px-28 py-16">
+    <div class="max-w-5xl mx-auto animate-on-scroll">
+      <div class="section-label mb-3">Acknowledgments</div>
+      <h2 class="display-heading text-3xl font-semibold text-white mb-6">With Thanks.</h2>
+      <p class="text-slate-400 leading-relaxed max-w-2xl">
+        Thank you to my manager and the entire HDL Services team at SAP Waterloo for their mentorship, patience, and for trusting me with meaningful, real-world work from day one. Your willingness to answer questions made all the difference.
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="relative z-10 px-6 md:px-16 lg:px-28 py-8 border-t border-white/5">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+      <span class="font-mono">Jashanjot Panjrath · 1222040 · University of Guelph</span>
+      <span>Bachelor of Computing Co-op — W4 Work Term Report · Winter 2026</span>
+    </div>
+  </footer>
+
+  <!-- ========== SCROLL ANIMATION ========== -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
